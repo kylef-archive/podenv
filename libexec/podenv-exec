@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+COMMAND=$1
+if [ -z "$COMMAND" ] ; then
+  echo "Usage: podenv exec <command>"
+  exit 1
+fi
+
+shift 1
+
+VERSION="$(podenv-version-name)"
+if [ "$VERSION" != "system" ]; then
+  export GEM_HOME="$PODENV_ROOT/versions/$VERSION"
+  export PATH="$GEM_HOME/bin:$PATH"
+fi
+
+exec "$COMMAND" "$@"
