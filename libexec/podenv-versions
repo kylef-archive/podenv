@@ -10,11 +10,17 @@ for arg; do
   esac
 done
 
-print_version() {
-  local version
+CURRENT_VERSION=$(podenv-version-name || true)
 
+if [ "$CURRENT_VERSION" == "system" ]; then
+  echo "* system"
+fi
+
+print_version() {
   if [ -n "$bare" ]; then
     echo "$1"
+  elif [ "$1" == "$CURRENT_VERSION" ]; then
+    echo "* $1 (set by $(podenv-version-origin))"
   else
     echo "  $1"
   fi
