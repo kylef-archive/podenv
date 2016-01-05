@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -e
+
+VERSION=$1
+if [ -z "$VERSION" ] ; then
+  echo "Usage: podenv install <version>"
+  exit 1
+fi
+
+if [ -d "$PODENV_ROOT/versions/$VERSION" ]; then
+  echo "$VERSION is already installed."
+  exit 1
+fi
+
+if [ "$VERSION" == "--list" ]; then
+  curl -s https://rubygems.org/api/v1/versions/cocoapods.json | ruby -e "require 'json'; JSON.parse(STDIN.read).each { |v| puts v['number'] }"
+  exit 0
+fi
+
+if ! curl -s https://rubygems.org/api/v1/versions/cocoapods.json | ruby -e "require 'json'; exit(JSON.parse(STDIN.read).find { |v| v['number'] == '$VERSION' }.nil? ? 1 : 0)" ; then
+  echo "CocoaPods $VERSION does not exist."
+  exit 1
+fi
+
+DESTINATION="$PODENV_ROOT/versions/$VERSION"
+export GEM_HOME="$DESTINATION"
+gem install cocoapods -v "$VERSION"

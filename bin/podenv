@@ -20,6 +20,10 @@ export PATH="$(find_libexec_path):$PATH"
 usage() {
   echo "Usage: podenv [--version] <command>"
   echo
+  echo "  versions  Lists all installed CocoaPods versions"
+  echo "  install   Installs a version of CocoaPods"
+  echo "  uninstall Uninstalls a specific CocoaPods version"
+  echo
   echo "Visit https://github.com/kylef/podenv for more info."
 }
 

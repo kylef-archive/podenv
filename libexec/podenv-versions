@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# List all CocoaPods versions available to podenv
+
+set -e
+
+unset bare
+for arg; do
+  case "$arg" in
+  --bare ) bare=1 ;;
+  esac
+done
+
+print_version() {
+  local version
+
+  if [ -n "$bare" ]; then
+    echo "$1"
+  else
+    echo "  $1"
+  fi
+}
+
+VERSIONS_DIR="$PODENV_ROOT/versions"
+
+# Installed into ~/.podenv/versions
+for path in "$VERSIONS_DIR"/*; do
+  if [ -d "$path" ]; then
+    print_version "${path##*/}"
+  fi
+done
