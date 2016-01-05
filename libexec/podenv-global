@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Set or show the global CocoaPods version
+# completes
+
+set -e
+
+if [ "$1" = "--complete" ]; then
+  echo "system"
+  exec podenv-versions --bare
+fi
+
+VERSION=$1
+VERSION_FILE="$PODENV_ROOT/version"
+
+version_exists() {
+  [ -d "$PODENV_ROOT/versions/$1" ]
+}
+
+if [ -z "$VERSION" ]; then
+  if [ -f "$VERSION_FILE" ]; then
+    cat "$VERSION_FILE"
+  else
+    echo "podenv: version is not set"
+    exit 1
+  fi
+elif [ -d "$PODENV_ROOT/versions/$VERSION" ]; then
+  echo "$VERSION" > "$VERSION_FILE"
+else
+  echo "podenv: version \`$VERSION' is not installed"
+  exit 1
+fi
