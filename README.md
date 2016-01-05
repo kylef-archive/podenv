@@ -13,7 +13,13 @@ podenv allows you to:
 
 ## Installation
 
-**NOTE**: If you're on OS X, consider [installing with Homebrew](#via-homebrew).
+### Via Homebrew
+
+You can install podenv using the [Homebrew](http://brew.sh/) package manager.
+
+```shell
+$ brew install kylef/formulae/podenv
+```
 
 ### Via a Git clone
 
@@ -44,15 +50,6 @@ podenv allows you to:
     ```
 
 3. Restart your shell so the changes take effect.
-
-### Via Homebrew
-
-You can install podenv using the [Homebrew](http://brew.sh/) package manager
-on OS X.
-
-```shell
-$ brew install kylef/formulae/podenv
-```
 
 ## Usage
 
