@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+VERSION="$(podenv-version-name)"
+ORIGIN="$(podenv-version-origin)"
+
+echo "$VERSION (set by $ORIGIN)"

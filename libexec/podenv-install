@@ -26,3 +26,5 @@ fi
 DESTINATION="$PODENV_ROOT/versions/$VERSION"
 export GEM_HOME="$DESTINATION"
 gem install cocoapods -v "$VERSION"
+
+echo "$VERSION" > "$PODENV_ROOT/version"

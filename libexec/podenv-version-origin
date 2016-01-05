@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Find the reason the current CocoaPods version is set (either filename or environ)
+
+set -e
+
+if [ -n "$COCOAPODS_VERSION" ]; then
+  echo "COCOAPODS_VERSION environment variable"
+else
+  podenv-version-file
+fi

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -z "$COCOAPODS_VERSION" ]; then
+  COCOAPODS_VERSION_FILE=$(podenv-version-file)
+  if [ "$COCOAPODS_VERSION_FILE" == "$PODENV_ROOT/version" ]; then
+    if [[ -f "$COCOAPODS_VERSION_FILE" ]]; then
+      cat "$COCOAPODS_VERSION_FILE"
+    else
+      echo "system"
+    fi
+  else
+    cat "$COCOAPODS_VERSION_FILE" | ruby -e "require 'yaml'; puts YAML.load(STDIN.read)['COCOAPODS']"
+  fi
+fi

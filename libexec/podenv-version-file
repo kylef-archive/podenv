@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Find the file that sets the current CocoaPods version
+
+set -e
+
+if [ -r "Podfile.lock" ]; then
+  echo "Podfile.lock"
+else
+  echo "$PODENV_ROOT/version"
+fi
