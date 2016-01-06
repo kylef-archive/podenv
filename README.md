@@ -53,6 +53,27 @@ $ brew install kylef/formulae/podenv
 
 ## Usage
 
+### Getting Started
+
+Once you've installed podenv, you can install a specific version of CocoaPods using the install command:
+
+```shell
+$ podenv install 1.0.0.beta.2
+```
+
+Alternatively, you can install the version specified in the local `Podfile.lock` file using the following:
+
+```shell
+$ podenv install
+```
+
+Then you can continue to use CocoaPods as you normally would, podenv which automatically switch to the correct version locked from your `Podfile.lock` when you run it.
+
+```shell
+$ pod --version
+1.0.0.beta.2
+```
+
 ### Commands
 
 ##### `version`
@@ -94,6 +115,17 @@ Installs a version of CocoaPods.
 
 ```shell
 $ podenv install 1.0.0.beta.2
+```
+
+###### Listing all available versions
+
+```shell
+$ podenv install --list
+1.0.0.beta.2
+1.0.0.beta.1
+0.39.0
+0.39.0.rc.1
+...
 ```
 
 ##### `uninstall`
