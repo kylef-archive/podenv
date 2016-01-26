@@ -2,32 +2,90 @@
 
 set -e
 
-VERSION=$1
-if [ -z "$VERSION" ] ; then
-  VERSION="$(podenv-version-name)"
-  if [ "$VERSION" == "system" ]; then
-    echo "Usage: podenv install <version>"
+check_version() {
+  VERSION="$1"
+  if ! curl -s https://rubygems.org/api/v1/versions/cocoapods.json | ruby -e "require 'json'; exit(JSON.parse(STDIN.read).find { |v| v['number'] == '$VERSION' }.nil? ? 1 : 0)" ; then
+    echo "CocoaPods $VERSION does not exist."
+    exit 1
+  fi
+}
+
+setup_environment() {
+  VERSION="$1"
+  DESTINATION="$PODENV_ROOT/versions/$VERSION"
+  export GEM_HOME="$DESTINATION"
+}
+
+install_version_gem() {
+  VERSION="$1"
+  gem install cocoapods -v "$VERSION" --no-document
+  echo "$VERSION" > "$PODENV_ROOT/version"
+}
+
+install_version_git_branch() {
+  REPO="$1"
+  BRANCH="$2"
+
+  DESTINATION="$TMPDIR/podenv-$BRANCH"
+  git clone --quiet --depth 1 --branch "$BRANCH" "$REPO" "$DESTINATION"
+
+  cd "$DESTINATION"
+  gem install bundler --no-document
+  bundle install
+  rake install
+  cd
+  rm -fr "$DESTINATION"
+}
+
+if [ "$1" == "--list" ]; then
+  curl -s https://rubygems.org/api/v1/versions/cocoapods.json | ruby -e "require 'json'; JSON.parse(STDIN.read).each { |v| puts v['number'] }"
+  exit
+fi
+
+if [ -z "$TMPDIR" ]; then
+  export TMPDIR="/tmp"
+fi
+
+REPO="https://github.com/CocoaPods/CocoaPods"
+BRANCH=""
+
+while [[ $# > 1 ]]; do
+  case "$1" in
+    --repo)
+      shift
+      REPO="$1"
+      ;;
+    --branch)
+      shift
+      BRANCH="$1"
+      ;;
+  esac
+
+  shift
+done
+
+if [ -z "$BRANCH" ]; then
+  VERSION=$1
+
+  if [ -z "$VERSION" ] ; then
+    VERSION="$(podenv-version-name)"
+    if [ "$VERSION" == "system" ]; then
+      echo "Usage: podenv install <version>"
+      exit 1
+    fi
+  fi
+
+  if [ -d "$PODENV_ROOT/versions/$VERSION" ]; then
+    echo "$VERSION is already installed."
     exit 1
   fi
 fi
 
-if [ -d "$PODENV_ROOT/versions/$VERSION" ]; then
-  echo "$VERSION is already installed."
-  exit 1
+if [ -z "$BRANCH" ]; then
+  setup_environment "$VERSION"
+  check_version "$VERSION"
+  install_version_gem "$VERSION"
+else
+  setup_environment "$BRANCH"
+  install_version_git_branch "$REPO" "$BRANCH"
 fi
-
-if [ "$VERSION" == "--list" ]; then
-  curl -s https://rubygems.org/api/v1/versions/cocoapods.json | ruby -e "require 'json'; JSON.parse(STDIN.read).each { |v| puts v['number'] }"
-  exit 0
-fi
-
-if ! curl -s https://rubygems.org/api/v1/versions/cocoapods.json | ruby -e "require 'json'; exit(JSON.parse(STDIN.read).find { |v| v['number'] == '$VERSION' }.nil? ? 1 : 0)" ; then
-  echo "CocoaPods $VERSION does not exist."
-  exit 1
-fi
-
-DESTINATION="$PODENV_ROOT/versions/$VERSION"
-export GEM_HOME="$DESTINATION"
-gem install cocoapods -v "$VERSION"
-
-echo "$VERSION" > "$PODENV_ROOT/version"
