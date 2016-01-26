@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
 
 set -e
-
-find_libexec_path() {
-  cd "$(dirname "${BASH_SOURCE[0]}")"
-  cd "$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
-  echo "$PWD/../libexec"
-}
-export PATH="$(find_libexec_path):$PATH"
 exec podenv exec "pod" "$@"

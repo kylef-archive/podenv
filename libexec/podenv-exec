@@ -11,9 +11,22 @@ fi
 shift 1
 
 VERSION="$(podenv-version-name)"
-if [ "$VERSION" != "system" ]; then
+if [ "$VERSION" = "system" ]; then
+  PODENV_LIBEXEC_PATH="$(which podenv)"
+  PODENV_LIBEXEC_PATH="${PODENV_LIBEXEC_PATH//\/podenv}"
+  PATH=:$PATH:
+  PATH=${PATH//:$PODENV_LIBEXEC_PATH:/:}
+  PATH=${PATH#:}; PATH=${PATH%:}
+
+  PODENV_BIN_PATH="$(which podenv)"
+  PODENV_BIN_PATH="${PODENV_BIN_PATH//\/podenv}"
+  PATH=:$PATH:
+  PATH=${PATH//:$PODENV_BIN_PATH:/:}
+  PATH=${PATH#:}; PATH=${PATH%:}
+
+  exec -a "$COMMAND" "$COMMAND" "$@"
+else
   export GEM_HOME="$PODENV_ROOT/versions/$VERSION"
   export PATH="$GEM_HOME/bin:$PATH"
+  exec -a "$COMMAND" "$GEM_HOME/bin/$COMMAND" "$@"
 fi
-
-exec "$COMMAND" "$@"
