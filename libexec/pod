@@ -2,6 +2,13 @@
 
 set -e
 
+PODENV_INSTALLED_VERSIONS=$(podenv versions || true)
+if [ "$PODENV_INSTALLED_VERSIONS"  == "* system" ]; then
+  echo "Looks like there is no Cocoapods installed in the system"
+  echo "podenv detected: use podenv install to install a cocoapods version"
+  exit 1
+fi
+
 find_libexec_path() {
   cd "$(dirname "${BASH_SOURCE[0]}")"
   cd "$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
