@@ -142,7 +142,7 @@ The version inside podenv will be the branch name, for example `0.39-stable`.
 You can explicitly use this version via the environ variable, for example:
 
 ```shell
-$ env POD_VERSION=0.39-stable pod
+$ env COCOAPODSPOD_VERSION=0.39-stable pod
 ```
 
 **NOTE**: *You may also use `--repo` to install from a different GitHub
