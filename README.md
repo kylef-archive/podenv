@@ -21,6 +21,15 @@ You can install podenv using the [Homebrew](http://brew.sh/) package manager.
 $ brew install kylef/formulae/podenv
 ```
 
+During first-time installs, homebrew may throw a message stating 
+>"Warning: podenv already installed, it's just not linked"  
+
+To link the package, run
+
+```shell
+$ brew link --overwrite podenv
+```
+
 ### Via a Git clone
 
 1. Check out podenv, we recommend `~/.podenv` (but it can be installed elsewhere as long as you set `PODENV_ROOT`).
