@@ -13,4 +13,6 @@ if [ -z "$COCOAPODS_VERSION" ]; then
   else
     cat "$COCOAPODS_VERSION_FILE" | ruby -e "require 'yaml'; puts YAML.load(STDIN.read)['COCOAPODS']"
   fi
+else
+  echo "$COCOAPODS_VERSION"
 fi
